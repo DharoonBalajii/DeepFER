@@ -1,7 +1,7 @@
 """Train the DeepFER emotion recognition CNN.
 
 Usage:
-    python train.py [--epochs 25] [--batch-size 64]
+    python train.py [--epochs 60] [--batch-size 64]
 
 Loads images from dataset/train and dataset/test, applies data
 augmentation (rotation, zoom, shifts, horizontal flip) to the training
@@ -33,6 +33,8 @@ def get_generators(batch_size):
         width_shift_range=0.1,
         height_shift_range=0.1,
         zoom_range=0.15,
+        shear_range=8,
+        brightness_range=(0.8, 1.2),
         horizontal_flip=True,
     )
     test_datagen = ImageDataGenerator(rescale=1.0 / 255)
@@ -60,7 +62,7 @@ def get_generators(batch_size):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--epochs", type=int, default=25)
+    parser.add_argument("--epochs", type=int, default=60)
     parser.add_argument("--batch-size", type=int, default=64)
     args = parser.parse_args()
 
@@ -87,8 +89,8 @@ def main():
             save_best_only=True,
             verbose=1,
         ),
-        EarlyStopping(monitor="val_accuracy", patience=8, restore_best_weights=True),
-        ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=3, min_lr=1e-6),
+        EarlyStopping(monitor="val_accuracy", patience=12, restore_best_weights=True),
+        ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=4, min_lr=1e-6),
     ]
 
     history = model.fit(
