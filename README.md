@@ -19,7 +19,7 @@ DeepFER/
 ├── realtime.py             # live webcam emotion detection
 ├── app.py                  # Streamlit web app (upload a photo or use your camera)
 ├── outputs/                # trained model, plots, metrics (deepfer_model.keras is committed)
-├── packages.txt            # system libraries needed by opencv on Streamlit Cloud
+├── .python-version          # pins Python 3.12 for deployment (tensorflow has no 3.14 wheels yet)
 └── requirements.txt
 ```
 
@@ -72,6 +72,16 @@ python realtime.py
 Opens your webcam, detects faces with OpenCV's Haar cascade, and labels
 each face with its predicted emotion live. Press `q` to quit.
 
+`requirements.txt` installs `opencv-python-headless`, which is what the
+deployed web app needs (no GUI, no system libraries to fight with on a
+server). It doesn't include the window/display code `realtime.py`
+needs, so for this script specifically, swap in the full build first:
+
+```bash
+pip uninstall -y opencv-python-headless
+pip install opencv-python
+```
+
 ## 6. Web app
 
 ```bash
@@ -87,8 +97,8 @@ your camera, and see the predicted emotion with a confidence chart.
    [github.com/DharoonBalajii/DeepFER](https://github.com/DharoonBalajii/DeepFER)).
 2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
 3. Click **New app**, pick the `DeepFER` repo, branch `main`, main file `app.py`.
-4. Click **Deploy**. Streamlit Cloud reads `requirements.txt` (Python packages)
-   and `packages.txt` (system libraries OpenCV needs) automatically.
+4. Click **Deploy**. Streamlit Cloud reads `requirements.txt` and
+   `.python-version` automatically.
 
 The trained model (`outputs/deepfer_model.keras`, ~16MB) is committed to
 the repo specifically so the deployed app has something to load — normally
