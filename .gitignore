@@ -2,5 +2,6 @@ venv/
 __pycache__/
 *.pyc
 dataset/
-outputs/
+outputs/*
+!outputs/deepfer_model.keras
 .DS_Store

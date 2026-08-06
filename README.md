@@ -17,7 +17,9 @@ DeepFER/
 ├── evaluate.py            # precision/recall/F1 + confusion matrix on test set
 ├── predict_image.py        # predict the emotion in a single photo
 ├── realtime.py             # live webcam emotion detection
-├── outputs/                # trained model, plots, metrics (created after training)
+├── app.py                  # Streamlit web app (upload a photo or use your camera)
+├── outputs/                # trained model, plots, metrics (deepfer_model.keras is committed)
+├── packages.txt            # system libraries needed by opencv on Streamlit Cloud
 └── requirements.txt
 ```
 
@@ -69,6 +71,29 @@ python realtime.py
 
 Opens your webcam, detects faces with OpenCV's Haar cascade, and labels
 each face with its predicted emotion live. Press `q` to quit.
+
+## 6. Web app
+
+```bash
+streamlit run app.py
+```
+
+Opens a local web page where you can upload a photo, or take one with
+your camera, and see the predicted emotion with a confidence chart.
+
+### Deploying it publicly (Streamlit Community Cloud)
+
+1. Push this repo to GitHub (already done if you're reading this on
+   [github.com/DharoonBalajii/DeepFER](https://github.com/DharoonBalajii/DeepFER)).
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+3. Click **New app**, pick the `DeepFER` repo, branch `main`, main file `app.py`.
+4. Click **Deploy**. Streamlit Cloud reads `requirements.txt` (Python packages)
+   and `packages.txt` (system libraries OpenCV needs) automatically.
+
+The trained model (`outputs/deepfer_model.keras`, ~16MB) is committed to
+the repo specifically so the deployed app has something to load — normally
+trained models are regenerated locally and gitignored, but a deployed app
+needs the weights available in the repo it deploys from.
 
 ## About the dataset
 
